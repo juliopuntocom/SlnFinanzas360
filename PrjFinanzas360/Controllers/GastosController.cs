@@ -90,6 +90,44 @@ namespace PrjFinanzas360.Controllers
             return Ok(detalle);
         }
 
+        [HttpPut("editar")]
+        public async Task<IActionResult> EditarGasto([FromBody] EditarGastoDto request)
+        {
+            var idUsuario =
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+                User.FindFirst("sub")?.Value ??
+                User.FindFirst("uid")?.Value;
+
+            if (string.IsNullOrEmpty(idUsuario))
+                return Unauthorized();
+
+            await _gastoService.EditarGastoAsync(idUsuario, request);
+
+            return Ok(new
+            {
+                mensaje = "Gasto editado correctamente"
+            });
+        }
+
+
+        [HttpDelete("{idGasto}/eliminar")]
+        public async Task<IActionResult> EliminarGasto(string idGasto)
+        {
+            var idUsuario =
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+                User.FindFirst("sub")?.Value ??
+                User.FindFirst("uid")?.Value;
+
+            if (string.IsNullOrEmpty(idUsuario))
+                return Unauthorized();
+
+            await _gastoService.EliminarGastoAsync(idGasto, idUsuario);
+
+            return Ok(new
+            {
+                mensaje = "Gasto eliminado correctamente"
+            });
+        }
 
     }
 }

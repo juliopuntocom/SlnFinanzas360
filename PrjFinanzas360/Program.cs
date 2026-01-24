@@ -1,8 +1,10 @@
-﻿using PrjFinanzas360.Data;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using PrjFinanzas360.Data;
+using PrjFinanzas360.Engine;
+using PrjFinanzas360.Interface;
 using PrjFinanzas360.Security;
 using PrjFinanzas360.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 
@@ -18,6 +20,13 @@ builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<GastoService>();
 builder.Services.AddScoped<MenuService>();
 
+builder.Services.AddScoped<IOcrEngine, TesseractOcrEngine>();
+builder.Services.AddScoped<OcrProcesor>();
+builder.Services.AddScoped<OcrService>();
+builder.Services.AddScoped<PdfToImageConverter>();
+
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+builder.Services.AddScoped<MetodoPagoService>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

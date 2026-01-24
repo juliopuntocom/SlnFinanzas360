@@ -102,5 +102,56 @@ namespace PrjFinanzas360.Services
             return gastos;
         }
 
+        public async Task EditarGastoAsync(string idUsuario, EditarGastoDto request)
+        {
+            using var connection = await _context.CreateConnectionAsync(idUsuario);
+
+            var dtDetalles = new DataTable();
+            dtDetalles.Columns.Add("PRODUCTO", typeof(string));
+            dtDetalles.Columns.Add("PRECIO", typeof(decimal));
+
+            foreach (var d in request.Detalles)
+            {
+                dtDetalles.Rows.Add(d.Producto, d.Precio);
+            }
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@ID_GASTO", request.IdGasto);
+            parameters.Add("@ID_CATEGORIA", request.IdCategoria);
+            parameters.Add("@ID_METODO", request.IdMetodo);
+            parameters.Add("@FECHA", request.Fecha);
+            parameters.Add("@MONTO", request.Monto);
+            parameters.Add("@TIPO", request.Tipo);
+            parameters.Add("@DESCRIPCION", request.Descripcion);
+
+            parameters.Add(
+                "@DETALLES",
+                dtDetalles.AsTableValuedParameter("TVP_DETALLE_GASTO")
+            );
+
+            await connection.ExecuteAsync(
+                "SP_EDITAR_GASTO",
+                parameters,
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public async Task EliminarGastoAsync(string idGasto, string idUsuario)
+        {
+            using var connection = await _context.CreateConnectionAsync(idUsuario);
+
+            var rows = await connection.ExecuteAsync(
+                "SP_ELIMINAR_GASTO",
+                new
+                {
+                    ID_GASTO = idGasto
+                },
+                commandType: CommandType.StoredProcedure
+            );
+
+            if (rows == 0)
+                throw new Exception("No se pudo eliminar el gasto o ya fue eliminado");
+        }
+
     }
 }
