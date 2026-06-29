@@ -56,5 +56,23 @@ namespace PrjFinanzas360.Services
 
 
         }
+
+        public LoginResponseDto GenerarTokenApiPublica()
+        {
+            var jwt = _jwtService.GenerateToken(
+                "USR0001",
+                "api@finanzas360.com",
+                "API",
+                "PUBLICA",
+                ""
+            );
+
+            return new LoginResponseDto
+            {
+                Token = jwt.Token,
+                Mensaje = "Token API generado correctamente",
+                ExpiraEn = jwt.Expires
+            };
+        }
     }
 }

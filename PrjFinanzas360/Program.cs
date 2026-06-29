@@ -28,6 +28,7 @@ builder.Services.AddScoped<PdfToImageConverter>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<MetodoPagoService>();
 
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

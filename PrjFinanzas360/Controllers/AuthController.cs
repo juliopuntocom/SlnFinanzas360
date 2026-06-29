@@ -29,5 +29,12 @@ namespace PrjFinanzas360.Controllers
             return Ok(response);
         }
 
+        [HttpGet("token-publico")]
+        public IActionResult GenerarTokenPublico()
+        {
+            var token = _authService.GenerarTokenApiPublica();
+
+            return Ok(token);
+        }
     }
 }
