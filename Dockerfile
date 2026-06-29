@@ -4,11 +4,13 @@ EXPOSE 8080
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+
 COPY . .
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish
+
+RUN dotnet restore PrjFinanzas360/PrjFinanzas360.csproj
+RUN dotnet publish PrjFinanzas360/PrjFinanzas360.csproj -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "SlnFinanzas360.dll"]
+ENTRYPOINT ["dotnet", "PrjFinanzas360.dll"]
