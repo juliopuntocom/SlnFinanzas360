@@ -16,29 +16,29 @@ namespace PrjFinanzas360.Services
         }
 
         public async Task<string> RegistrarGastoAsync(
-            string idUsuario,
-            RegistrarGastoDto request)
+        string idUsuario,
+        RegistrarGastoDto request)
         {
             var detalleJson = request.Detalle != null && request.Detalle.Any()
                 ? JsonSerializer.Serialize(
                     request.Detalle.Select(d => new
                     {
                         producto = d.Producto,
-                        precio = d.Precio
+                        precio = d.Precio,
+                        idCategoria = d.IdCategoria
                     }))
                 : null;
 
             using var connection = await _context.CreateConnectionAsync(idUsuario);
 
-
             var parameters = new DynamicParameters();
             parameters.Add("@ID_USUARIO", idUsuario);
-            parameters.Add("@ID_CATEGORIA", request.IdCategoria);
             parameters.Add("@ID_METODO", request.IdMetodo);
             parameters.Add("@FECHA", request.Fecha);
             parameters.Add("@MONTO", request.Monto);
             parameters.Add("@TIPO", request.Tipo);
             parameters.Add("@DESCRIPCION", request.Descripcion);
+            parameters.Add("@ID_COMPROBANTE", request.IdComprobante);
             parameters.Add("@DETALLE_JSON", detalleJson);
 
             var result = await connection.QueryFirstAsync<dynamic>(
@@ -49,6 +49,7 @@ namespace PrjFinanzas360.Services
 
             return result.ID_GASTO;
         }
+
         public async Task<GastoDetalleResponseDto?> ObtenerGastoDetalleAsync(string idGasto, string idUsuario)
         {
             using var connection = await _context.CreateConnectionAsync(idUsuario);

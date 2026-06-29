@@ -51,17 +51,18 @@
     // ── Movimientos recientes ───────────────────────────────────────────────
     public class MovimientoDto
     {
-        public string IdGasto { get; set; } = string.Empty;
-        public string Descripcion { get; set; } = string.Empty;
+        public string IdGasto { get; set; }
+        public string Descripcion { get; set; }
         public decimal Monto { get; set; }
         public DateTime Fecha { get; set; }
-        public int Tipo { get; set; }
-        public string Categoria { get; set; } = string.Empty;
-        public string? CategoriaIcono { get; set; }
-        public string? CategoriaColor { get; set; }
-        public string MetodoPago { get; set; } = string.Empty;
-        public int MetodoTipo { get; set; }
-        public string FechaRelativa { get; set; } = string.Empty;
+        public byte Tipo { get; set; }
+
+        public string Categorias { get; set; }
+
+        public string MetodoPago { get; set; }
+        public byte MetodoTipo { get; set; }
+
+        public string FechaRelativa { get; set; }
     }
 
     // ── Estado de presupuestos ──────────────────────────────────────────────

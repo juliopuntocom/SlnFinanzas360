@@ -3,8 +3,6 @@
     public class GastoDetalleCabeceraDto
     {
         public string IdGasto { get; set; }
-        public string IdCategoria { get; set; }
-        public string Categoria { get; set; }
         public string IdMetodo { get; set; }
         public string MetodoPago { get; set; }
         public DateTime Fecha { get; set; }

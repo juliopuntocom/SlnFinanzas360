@@ -150,15 +150,21 @@ namespace PrjFinanzas360.Services
         public async Task<List<MovimientoDto>> ObtenerMovimientosRecientesAsync(string idUsuario, int top = 8)
         {
             var lista = new List<MovimientoDto>();
+
             using var conn = new SqlConnection(_connectionString);
+
             using var cmd = new SqlCommand("SP_DASHBOARD_MOVIMIENTOS_RECIENTES", conn)
-            { CommandType = CommandType.StoredProcedure };
+            {
+                CommandType = CommandType.StoredProcedure
+            };
 
             cmd.Parameters.AddWithValue("@ID_USUARIO", idUsuario);
             cmd.Parameters.AddWithValue("@TOP", top);
+
             await conn.OpenAsync();
 
             using var reader = await cmd.ExecuteReaderAsync();
+
             while (await reader.ReadAsync())
             {
                 lista.Add(new MovimientoDto
@@ -168,14 +174,17 @@ namespace PrjFinanzas360.Services
                     Monto = reader.GetDecimal(reader.GetOrdinal("Monto")),
                     Fecha = reader.GetDateTime(reader.GetOrdinal("Fecha")),
                     Tipo = reader.GetByte(reader.GetOrdinal("Tipo")),
-                    Categoria = reader.GetString(reader.GetOrdinal("Categoria")),
-                    CategoriaIcono = reader.IsDBNull(reader.GetOrdinal("CategoriaIcono")) ? null : reader.GetString(reader.GetOrdinal("CategoriaIcono")),
-                    CategoriaColor = reader.IsDBNull(reader.GetOrdinal("CategoriaColor")) ? null : reader.GetString(reader.GetOrdinal("CategoriaColor")),
+
+                    Categorias = reader.IsDBNull(reader.GetOrdinal("Categorias"))
+                        ? ""
+                        : reader.GetString(reader.GetOrdinal("Categorias")),
+
                     MetodoPago = reader.GetString(reader.GetOrdinal("MetodoPago")),
                     MetodoTipo = reader.GetByte(reader.GetOrdinal("MetodoTipo")),
                     FechaRelativa = reader.GetString(reader.GetOrdinal("FechaRelativa"))
                 });
             }
+
             return lista;
         }
 
